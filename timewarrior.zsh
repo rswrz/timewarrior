@@ -5,10 +5,10 @@
 
 alias tw=timew
 
-alias tws='timew summary :ids'
-alias twsy='timew summary :ids :yesterday'
-alias twsw='timew summary :ids :week'
-alias twsm='timew summary :ids :month'
+alias tws='timew summary :ids :annotation'
+alias twsy='timew summary :ids :annotation :yesterday'
+alias twsw='timew summary :ids :annotation :week'
+alias twsm='timew summary :ids :annotation :month'
 alias twds='timew day summary'
 alias twws='timew week summary'
 alias twms='timew month summary'
