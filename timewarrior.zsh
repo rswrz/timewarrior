@@ -26,6 +26,8 @@ alias twmo='timew modify end'
 alias twrs='timew resize'
 alias twz='timew undo'
 alias twd='timew delete'
+alias twg='timew tag'
+alias twn='timew annotate'
 
 # twct == timewarrior change tag
 function twct(){
