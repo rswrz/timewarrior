@@ -28,6 +28,10 @@ alias twz='timew undo'
 alias twd='timew delete'
 alias twg='timew tag'
 alias twn='timew annotate'
+alias twx='timew export'
+alias twxd='timew export :day'
+alias twxy='timew export :yesterday'
+alias twxm='timew export :month'
 
 # twct == timewarrior change tag
 function twct(){
