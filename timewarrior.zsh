@@ -40,6 +40,29 @@ alias twssy='twss :yesterday'
 alias twssw='twss :week'
 alias twssm='twss :month'
 
+function twnn() {
+    ITEMS=()
+    for i in "$@"; do
+        if [[ $i = @* ]]; then
+            ITEMS+=("$i")
+            shift
+        fi
+    done
+
+    if [ ${#ITEMS[@]} -eq 0 ]; then
+        ITEMS+=("@1")
+    fi
+
+    for i in "$ITEMS[@]"; do
+        annotation=$(timew export "$i" | jq -r '.[0].annotation | select (.!=null)')
+        if [[ -z "${annotation}" ]]; then
+            timew annotate "$i" "${*}"
+        else
+            timew annotate "$i" "${annotation}; ${*}"
+        fi
+    done
+}
+
 # twct == timewarrior change tag
 function twct(){
     ITEMS=()
