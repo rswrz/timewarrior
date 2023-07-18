@@ -5,10 +5,10 @@
 
 alias tw=timew
 
-alias tws='timew summary :ids :annotation'
-alias twsy='timew summary :ids :annotation :yesterday'
-alias twsw='timew summary :ids :annotation :week'
-alias twsm='timew summary :ids :annotation :month'
+alias tws='timew summary :ids'
+alias twsy='timew summary :ids :yesterday'
+alias twsw='timew summary :ids :week'
+alias twsm='timew summary :ids :month'
 alias twds='timew day summary'
 alias twws='timew week summary'
 alias twms='timew month summary'
@@ -32,6 +32,13 @@ alias twx='timew export'
 alias twxd='timew export :day'
 alias twxy='timew export :yesterday'
 alias twxm='timew export :month'
+
+function twss() {
+    timew table ${@:-:day}
+}
+alias twssy='twss :yesterday'
+alias twssw='twss :week'
+alias twssm='twss :month'
 
 # twct == timewarrior change tag
 function twct(){
