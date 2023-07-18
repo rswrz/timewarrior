@@ -13,7 +13,6 @@ alias twds='timew day summary'
 alias twws='timew week summary'
 alias twms='timew month summary'
 
-
 alias twa='timew start'
 alias two='timew stop'
 alias twc='timew continue'
@@ -64,17 +63,17 @@ function twnn() {
 }
 
 # twct == timewarrior change tag
-function twct(){
+function twct() {
     ITEMS=()
     TAGS=()
     for a in "$@"; do
         case $a in
-            @*)
-                ITEMS+=("$a")
-                ;;
-            *)
-                TAGS+=("$a")
-                ;;
+        @*)
+            ITEMS+=("$a")
+            ;;
+        *)
+            TAGS+=("$a")
+            ;;
         esac
     done
 
