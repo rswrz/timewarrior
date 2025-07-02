@@ -41,56 +41,57 @@ alias twsay='twsa :yesterday'
 alias twsaw='twsa :week'
 alias twsam='twsa :month'
 
-function twnn() {
-    ITEMS=()
-    for i in "$@"; do
-        if [[ $i = @* ]]; then
-            ITEMS+=("$i")
-            shift
-        fi
-    done
-
-    if [ ${#ITEMS[@]} -eq 0 ]; then
-        ITEMS+=("@1")
+# twna == timewarrior annotate append
+function twna() {
+  ITEMS=()
+  for i in "$@"; do
+    if [[ $i = @* ]]; then
+      ITEMS+=("$i")
+      shift
     fi
+  done
 
-    for i in "$ITEMS[@]"; do
-        annotation=$(timew export "$i" | jq -r '.[0].annotation | select (.!=null)')
-        if [[ -z "${annotation}" ]]; then
-            timew annotate "$i" "${*}"
-        else
-            timew annotate "$i" "${annotation}; ${*}"
-        fi
-    done
+  if [ ${#ITEMS[@]} -eq 0 ]; then
+    ITEMS+=("@1")
+  fi
+
+  for i in "$ITEMS[@]"; do
+    annotation=$(timew export "$i" | jq -r '.[0].annotation | select (.!=null)')
+    if [[ -z "${annotation}" ]]; then
+      timew annotate "$i" "${*}"
+    else
+      timew annotate "$i" "${annotation}; ${*}"
+    fi
+  done
 }
 
 # twct == timewarrior change tag
 function twct() {
-    ITEMS=()
-    TAGS=()
-    for a in "$@"; do
-        case $a in
-        @*)
-            ITEMS+=("$a")
-            ;;
-        *)
-            TAGS+=("$a")
-            ;;
-        esac
-    done
+  ITEMS=()
+  TAGS=()
+  for a in "$@"; do
+    case $a in
+    @*)
+      ITEMS+=("$a")
+      ;;
+    *)
+      TAGS+=("$a")
+      ;;
+    esac
+  done
 
-    if [ $#TAGS -ne 2 ]; then
-        echo 'Too few or too many tags'
-        return
-    fi
-    if [ $#ITEMS -lt 1 ]; then
-        echo 'To few ids'
-        return
-    fi
+  if [ $#TAGS -ne 2 ]; then
+    echo 'Too few or too many tags'
+    return
+  fi
+  if [ $#ITEMS -lt 1 ]; then
+    echo 'To few ids'
+    return
+  fi
 
-    for item in "$ITEMS"; do
-        timew untag $item $TAGS[1]
-        timew tag $item $TAGS[-1]
-    done
-    timew summary
+  for item in "$ITEMS"; do
+    timew untag $item $TAGS[1]
+    timew tag $item $TAGS[-1]
+  done
+  timew summary
 }
