@@ -33,12 +33,13 @@ alias twxd='timew export :day'
 alias twxy='timew export :yesterday'
 alias twxm='timew export :month'
 
-function twss() {
-    timew table ${@:-:day}
+function twsa() {
+  timew table ${@:-:day}
 }
-alias twssy='twss :yesterday'
-alias twssw='twss :week'
-alias twssm='twss :month'
+
+alias twsay='twsa :yesterday'
+alias twsaw='twsa :week'
+alias twsam='twsa :month'
 
 function twnn() {
     ITEMS=()
