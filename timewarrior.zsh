@@ -13,7 +13,7 @@ alias twds='timew day summary'
 alias twws='timew week summary'
 alias twms='timew month summary'
 
-alias twa='timew start'
+alias twa='timew_start_with_annotation'
 alias two='timew stop'
 alias twc='timew continue'
 alias twt='timew track'
@@ -94,4 +94,33 @@ function twct() {
     timew tag $item $TAGS[-1]
   done
   timew summary
+}
+
+timew_start_with_annotation() {
+  local -a tags annotations
+  local a current_annotation new_annotation
+
+  for a in "$@"; do
+    if [[ "$a" == *" "* ]]; then
+      annotations+=("$a")
+    else
+      tags+=("$a")
+    fi
+  done
+
+  if (( ${#tags} )); then
+    timew start "${(@)tags}" || return $?
+  else
+    timew start || return $?
+  fi
+
+  (( ${#annotations} )) || return 0
+  new_annotation="${(j:; :)annotations}"
+  current_annotation=$(timew export @1 | jq -r '.[0].annotation // empty')
+
+  if [[ -z "$current_annotation" ]]; then
+    timew annotate "$new_annotation"
+  else
+    timew annotate "$current_annotation; $new_annotation"
+  fi
 }
