@@ -34,7 +34,11 @@ alias twxy='timew export :yesterday'
 alias twxm='timew export :month'
 
 function twsa() {
-  timew table ${@:-:day}
+  if (( $# )); then
+    timew table "$@"
+  else
+    timew table :day
+  fi
 }
 
 alias twsay='twsa :yesterday'
@@ -43,56 +47,69 @@ alias twsam='twsa :month'
 
 # twna == timewarrior annotate append
 function twna() {
-  ITEMS=()
-  for i in "$@"; do
-    if [[ $i = @* ]]; then
-      ITEMS+=("$i")
-      shift
+  local -a items annotation_words
+  local arg item current_annotation new_annotation
+
+  for arg in "$@"; do
+    if [[ $arg == @* ]]; then
+      items+=("$arg")
+    else
+      annotation_words+=("$arg")
     fi
   done
 
-  if [ ${#ITEMS[@]} -eq 0 ]; then
-    ITEMS+=("@1")
+  if (( ! ${#annotation_words} )); then
+    print -r -- 'Provide annotation text to append' >&2
+    return 1
   fi
 
-  for i in "$ITEMS[@]"; do
-    annotation=$(timew export "$i" | jq -r '.[0].annotation | select (.!=null)')
-    if [[ -z "${annotation}" ]]; then
-      timew annotate "$i" "${*}"
+  if (( ! ${#items} )); then
+    items+=("@1")
+  fi
+
+  new_annotation="${(j: :)annotation_words}"
+
+  for item in "${items[@]}"; do
+    current_annotation=$(timew export "$item" | jq -r '.[0].annotation // empty')
+    if [[ -z $current_annotation ]]; then
+      timew annotate "$item" "$new_annotation" || return $?
     else
-      timew annotate "$i" "${annotation}; ${*}"
+      timew annotate "$item" "$current_annotation; $new_annotation" || return $?
     fi
   done
 }
 
 # twct == timewarrior change tag
 function twct() {
-  ITEMS=()
-  TAGS=()
-  for a in "$@"; do
-    case $a in
+  local -a items tags
+  local arg item
+
+  for arg in "$@"; do
+    case $arg in
     @*)
-      ITEMS+=("$a")
+      items+=("$arg")
       ;;
     *)
-      TAGS+=("$a")
+      tags+=("$arg")
       ;;
     esac
   done
 
-  if [ $#TAGS -ne 2 ]; then
-    echo 'Too few or too many tags'
-    return
-  fi
-  if [ $#ITEMS -lt 1 ]; then
-    echo 'To few ids'
-    return
+  if (( ${#tags} != 2 )); then
+    print -r -- 'Expected exactly two tags (old new)' >&2
+    return 1
   fi
 
-  for item in "$ITEMS"; do
-    timew untag $item $TAGS[1]
-    timew tag $item $TAGS[-1]
+  if (( ! ${#items} )); then
+    print -r -- 'Provide at least one @id' >&2
+    return 1
+  fi
+
+  for item in "${items[@]}"; do
+    timew untag "$item" "${tags[1]}" || return $?
+    timew tag "$item" "${tags[2]}" || return $?
   done
+
   timew summary
 }
 
