@@ -1,8 +1,3 @@
-# plugin for timewarrior
-#
-# this currently only includes aliases, but an attempt at completion shopuld follow
-#
-
 alias tw=timew
 
 alias tws='timew_report_table'
@@ -28,6 +23,7 @@ alias twd='timew delete'
 alias twg='timew tag'
 alias twug='timew untag'
 alias twn='timew annotate'
+alias twna='timew_annotate_apend'
 alias twx='timew export'
 alias twxd='timew export :day'
 alias twxy='timew export :yesterday'
@@ -41,8 +37,7 @@ function timew_report_table() {
   fi
 }
 
-# twna == timewarrior annotate append
-function twna() {
+function timew_annotate_apend() {
   local -a items annotation_words
   local arg item current_annotation new_annotation
 
