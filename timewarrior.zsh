@@ -5,10 +5,10 @@
 
 alias tw=timew
 
-alias tws='timew summary :ids'
-alias twsy='timew summary :ids :yesterday'
-alias twsw='timew summary :ids :week'
-alias twsm='timew summary :ids :month'
+alias tws='timew_report_table'
+alias twsy='tws :yesterday'
+alias twsw='tws :week'
+alias twsm='tws :month'
 alias twds='timew day summary'
 alias twws='timew week summary'
 alias twms='timew month summary'
@@ -33,17 +33,13 @@ alias twxd='timew export :day'
 alias twxy='timew export :yesterday'
 alias twxm='timew export :month'
 
-function twsa() {
+function timew_report_table() {
   if (( $# )); then
-    timew table "$@"
+    timew report table "$@"
   else
-    timew table :day
+    timew report table :day
   fi
 }
-
-alias twsay='twsa :yesterday'
-alias twsaw='twsa :week'
-alias twsam='twsa :month'
 
 # twna == timewarrior annotate append
 function twna() {
